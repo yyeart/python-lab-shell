@@ -1,20 +1,43 @@
-from src.power import power_function
-from src.constants import SAMPLE_CONSTANT
+import logging
+from src.config import LOGGING_CONFIG
+from src.commands import ls
 
+logging.config.dictConfig(LOGGING_CONFIG)
+logger = logging.getLogger(__name__)
 
 def main() -> None:
-    """
-    Обязательнная составляющая программ, которые сдаются. Является точкой входа в приложение
-    :return: Данная функция ничего не возвращает
-    """
+    print('Для выхода используйте exit')
 
-    target, degree = map(int, input("Введите два числа разделенные пробелом: ").split(" "))
+    while True:
+        try:
+            cmd = input("> ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print("\nВыход")
+            break
 
-    result = power_function(target=target, power=degree)
+        if not cmd:
+            continue
 
-    print(result)
+        if cmd == 'exit':
+            break
 
-    print(SAMPLE_CONSTANT)
+        split = cmd.split()
+        command = split[0]
+        args = split[1:]
 
-if __name__ == "__main__":
+        try:
+            if command == 'ls':
+                l_flag = '-l' in args
+                path = next((a for a in args if a != '-l'), '.')
+                ls.run_ls(path, l_flag)
+            else:
+                err = f'Неизвестная команда: {command}'
+                print(err)
+                logger.warning(err)
+        except Exception as e:
+            err = f'Ошибка выполнения команды "{cmd}": {e}'
+            print(err)
+            logger.exception(err)
+
+if __name__ == '__main__':
     main()
