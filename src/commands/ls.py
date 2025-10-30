@@ -2,6 +2,7 @@ import stat
 import time
 import logging
 import os
+from src.errors import path_error, perm_error, os_error
 from pathlib import Path
 from src.config import LOGGING_CONFIG
 
@@ -19,9 +20,7 @@ def run_ls(path: str = '.', l_flag: bool = False) -> None:
     p = Path(path).resolve()
     try:
         if not os.path.exists(p):
-            err = f'Ошибка: путь не найден - {p}'
-            print(err)
-            logger.error(err)
+            path_error(p)
             return
 
         if p.is_file():
@@ -40,10 +39,6 @@ def run_ls(path: str = '.', l_flag: bool = False) -> None:
                 print(item.name)
         logger.info(f'ls {"-l " if l_flag else ""}{p}')
     except PermissionError as e:
-        err = f'Недостаточно прав: {e}'
-        print(err)
-        logger.error(err)
+        perm_error(e)
     except OSError as e:
-        err = f'Системная ошибка: {e}'
-        print(err)
-        logger.error(err)
+        os_error(e)
