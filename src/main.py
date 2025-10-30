@@ -1,7 +1,7 @@
 import logging
 import os
 from src.config import LOGGING_CONFIG
-from src.commands import ls, cd, cat
+from src.commands import ls, cd, cat, cp
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
@@ -46,6 +46,16 @@ def main() -> None:
                 cd.run_cd(path, extra_args)
             elif command == 'cat':
                 cat.run_cat(path, extra_args)
+            elif command == 'cp':
+                if args[0] == '-r':
+                    source = args[1]
+                    dest = args[2]
+                    r_flag = True
+                else:
+                    source = args[0]
+                    dest = args[1]
+                    r_flag = False
+                cp.run_cp(source, dest, r_flag)
             else:
                 err = f'Неизвестная команда: {command}'
                 print(err)

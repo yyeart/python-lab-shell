@@ -1,7 +1,7 @@
 import logging
 import os
 from src.config import LOGGING_CONFIG
-from src.errors import args_error, path_error, perm_error
+from src.errors import too_many_args_error, path_error, perm_error, no_args_error
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
@@ -9,15 +9,13 @@ logger = logging.getLogger(__name__)
 def run_cat(path: str | None = None, extra_args: list[str] | None = None) -> None:
     try:
         if extra_args and len(extra_args) > 0:
-            args_error()
+            too_many_args_error('cat')
             return
         if not path:
-            err = 'Ошибка: файл не указан'
-            print(err)
-            logger.error(err)
+            no_args_error('cat')
             return
         if not os.path.exists(path):
-            path_error(path)
+            path_error(path, 'cat')
             return
         if os.path.isdir(path):
             err = f'{path}: каталог'

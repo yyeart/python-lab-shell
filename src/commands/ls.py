@@ -20,7 +20,7 @@ def run_ls(path: str = '.', l_flag: bool = False) -> None:
     p = Path(path).resolve()
     try:
         if not os.path.exists(p):
-            path_error(p)
+            path_error(p, 'ls')
             return
 
         if p.is_file():
