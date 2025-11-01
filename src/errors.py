@@ -31,7 +31,7 @@ def too_many_args_error(command: str) -> None:
     custom_error(text)
 
 def no_args_error(command: str) -> None:
-    text = f'{command}: не указан аргумент'
+    text = f'{command}: не указан(ы) аргумент(ы)'
     custom_error(text)
 
 def not_enough_args_error(command: str) -> None:
