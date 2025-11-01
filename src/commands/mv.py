@@ -9,7 +9,7 @@ logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 
 def run_mv(source: str, dest: str) -> None:
-    s, d = Path(source), Path(dest)
+    s, d = Path(os.path.expanduser(source)), Path(os.path.expanduser(dest))
     try:
         if not os.path.exists(s):
             text = f'mv: Источник не найден - {s}'

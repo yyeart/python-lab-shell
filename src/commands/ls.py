@@ -17,7 +17,7 @@ def get_perms(mode: int) -> str:
     return mode_str
 
 def run_ls(path: str = '.', l_flag: bool = False) -> None:
-    p = Path(path)
+    p = Path(os.path.expanduser(path))
     try:
         if not os.path.exists(p):
             path_error(p, 'ls')

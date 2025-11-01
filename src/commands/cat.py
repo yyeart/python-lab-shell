@@ -8,7 +8,7 @@ logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 
 def run_cat(path: str) -> None:
-    p = Path(path)
+    p = Path(os.path.expanduser(path))
     try:
         if not os.path.exists(p):
             path_error(p, 'cat')

@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 def run_cp(source: str, dest: str, r_flag: bool = False) -> None:
     try:
-        s, d = Path(source), Path(dest)
+        s, d = Path(os.path.expanduser(source)), Path(os.path.expanduser(dest))
         if not os.path.exists(s):
             not_found_error(s, 'cp')
             return

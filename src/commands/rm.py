@@ -9,7 +9,7 @@ logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 
 def run_rm(path: str, r_flag: bool):
-    p = Path(path)
+    p = Path(os.path.expanduser(path))
     try:
         if not os.path.exists(p):
             not_found_error(p, 'rm')
@@ -19,7 +19,10 @@ def run_rm(path: str, r_flag: bool):
                 text = 'rm: пропущен флаг -r для удаления каталога'
                 custom_error(text)
                 return
-            # print('rm: удалить каталог рекурсивно? (y/n)')
+            if str(p) in os.getcwd() or str(p) in ['.', '..'] or str(p) == '/' or str(p)[-2:] in [':/', ':\\']:
+                text = 'rm: запрещено удалять корневой или родительский каталог'
+                custom_error(text)
+                return
             flag = True if input('rm: удалить каталог рекурсивно?(y/n) ') == 'y' else False
             if flag:
                 try:
