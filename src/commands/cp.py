@@ -1,53 +1,47 @@
 import logging
 import os
-import shutil
+from shutil import copy2, copytree
+from pathlib import Path
 from src.config import LOGGING_CONFIG
-from src.errors import no_args_error, not_found_error, perm_error
+from src.errors import not_found_error, perm_error, custom_error
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 
-def run_cp(source: str | None = None, dest: str | None = None, r_flag: bool = False) -> None:
+def run_cp(source: str, dest: str, r_flag: bool = False) -> None:
     try:
-        if not source or not dest:
-            no_args_error('cp')
-            return
-        if not os.path.exists(source):
-            not_found_error(source, 'cp')
+        s, d = Path(source), Path(dest)
+        if not os.path.exists(s):
+            not_found_error(s, 'cp')
             return
 
-        if os.path.isdir(source):
+        if os.path.isdir(s):
             if not r_flag:
-                err = f'cp: пропущен флаг -r для копирования каталога "{source}"'
-                print(err)
-                logger.error(err)
+                text = f'cp: пропущен флаг -r для копирования каталога "{s}"'
+                custom_error(text)
                 return
             try:
-                shutil.copytree(source, dest, dirs_exist_ok=True)
-                logger.info(f'cp -r {os.path.abspath(source)} {os.path.abspath(dest)}')
+                copytree(s, d, dirs_exist_ok=True)
+                logger.info(f'cp -r {os.path.abspath(s)} {os.path.abspath(d)}')
             except PermissionError as e:
                 perm_error(e)
             except Exception as e:
-                err = f'cp: ошибка при копировании каталога - {e}'
-                print(err)
-                logger.error(err)
+                text = f'cp: ошибка при копировании каталога - {e}'
+                custom_error(text)
             return
 
         try:
-            shutil.copy2(source, dest)
-            logger.info(f'cp {os.path.abspath(source)} {os.path.abspath(dest)}')
+            copy2(s, d)
+            logger.info(f'cp {os.path.abspath(s)} {os.path.abspath(d)}')
         except PermissionError as e:
             perm_error(e)
         except IsADirectoryError:
-            err = f'cp: {dest} - каталог'
-            print(err)
-            logger.error(err)
+            text = f'cp: {d} - каталог'
+            custom_error(text)
         except Exception as e:
-            err = f'cp: ошибка при копировании файла - {e}'
-            print(err)
-            logger.error(err)
+            text = f'cp: ошибка при копировании файла - {e}'
+            custom_error(text)
 
     except Exception as e:
-        err = f'cp: неожижанная ошибка - {e}'
-        print(err)
-        logger.error(err)
+        text = f'cp: неожиданная ошибка - {e}'
+        custom_error(text)

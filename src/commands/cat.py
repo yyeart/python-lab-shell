@@ -1,37 +1,31 @@
 import logging
 import os
+from pathlib import Path
 from src.config import LOGGING_CONFIG
-from src.errors import too_many_args_error, path_error, perm_error, no_args_error
+from src.errors import path_error, perm_error, custom_error
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 
-def run_cat(path: str | None = None, extra_args: list[str] | None = None) -> None:
+def run_cat(path: str) -> None:
+    p = Path(path)
     try:
-        if extra_args and len(extra_args) > 0:
-            too_many_args_error('cat')
+        if not os.path.exists(p):
+            path_error(p, 'cat')
             return
-        if not path:
-            no_args_error('cat')
-            return
-        if not os.path.exists(path):
-            path_error(path, 'cat')
-            return
-        if os.path.isdir(path):
-            err = f'{path}: каталог'
-            print(err)
-            logger.error(err)
+        if os.path.isdir(p):
+            text = f'{p} - каталог'
+            custom_error(text)
             return
 
-        with open(path, 'r', encoding='utf-8') as f:
+        with open(p, 'r', encoding='utf-8') as f:
             content = f.read()
             print(content)
-        logger.info(f'cat {os.path.abspath(path)}')
+        logger.info(f'cat {os.path.abspath(p)}')
 
     except PermissionError as e:
         perm_error(e)
 
     except UnicodeDecodeError:
-        err = f'Ошибка: невозможно прочитать файл: {path}'
-        print(err)
-        logger.error(err)
+        text = f'Ошибка: невозможно прочитать файл: {p}'
+        custom_error(text)

@@ -5,32 +5,35 @@ from pathlib import Path
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 
-def not_found_error(path: str | Path | None, command: str):
-    err = f'{command}: файл не найден - {path}'
+def custom_error(text: str) -> None:
+    err = f'{text}'
     print(err)
     logger.error(err)
+
+def not_found_error(path: str | Path | None, command: str) -> None:
+    text = f'{command}: файл не найден - {path}'
+    custom_error(text)
 
 def path_error(path: str | Path | None, command: str) -> None:
-    err = f'{command}: путь не найден - {path}'
-    print(err)
-    logger.error(err)
+    text = f'{command}: путь не найден - {path}'
+    custom_error(text)
 
 def perm_error(e: PermissionError) -> None:
-    err = f'Недостаточно прав: {e}'
-    print(err)
-    logger.warning(err)
+    text = f'Недостаточно прав: {e}'
+    custom_error(text)
 
 def os_error(e: OSError) -> None:
-    err = f'Системная ошибка: {e}'
-    print(err)
-    logger.error(err)
+    text = f'Системная ошибка: {e}'
+    custom_error(text)
 
 def too_many_args_error(command: str) -> None:
-    err = f'{command}: слишком много аргументов'
-    print(err)
-    logger.error(err)
+    text = f'{command}: слишком много аргументов'
+    custom_error(text)
 
 def no_args_error(command: str) -> None:
-    err = f'{command}: не указан аргумент'
-    print(err)
-    logger.error(err)
+    text = f'{command}: не указан аргумент'
+    custom_error(text)
+
+def not_enough_args_error(command: str) -> None:
+    text = f'{command}: недостаточно аргументов'
+    custom_error(text)
