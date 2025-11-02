@@ -8,11 +8,15 @@ from src.config import LOGGING_CONFIG
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 
-def run_rm(path: str, r_flag: bool):
+def run_rm(path: str, r_flag: bool = False):
     p = Path(os.path.expanduser(path))
     try:
         if not os.path.exists(p):
             not_found_error(p, 'rm')
+            return
+        if p.resolve() in [Path('/').resolve(), Path('..').resolve()]:
+            text = 'rm: запрещено удалять корневой или родительский каталог'
+            custom_error(text)
             return
         if p.resolve() == Path(os.getcwd()).resolve():
             text = 'rm: нельзя удалить текущий каталог'
@@ -25,10 +29,6 @@ def run_rm(path: str, r_flag: bool):
         if os.path.isdir(p):
             if not r_flag:
                 text = 'rm: пропущен флаг -r для удаления каталога'
-                custom_error(text)
-                return
-            if p.resolve() in [Path('/').resolve(), Path('..').resolve()]:
-                text = 'rm: запрещено удалять корневой или родительский каталог'
                 custom_error(text)
                 return
             flag = True if input('rm: удалить каталог рекурсивно?(y/n) ').lower() == 'y' else False

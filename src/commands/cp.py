@@ -5,6 +5,7 @@ from pathlib import Path
 from src.config import LOGGING_CONFIG
 from src.errors import not_found_error, perm_error, custom_error
 
+
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 
