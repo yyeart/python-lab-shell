@@ -32,6 +32,19 @@ def test_rm_dir_without_r_flag(fs: FakeFilesystem, capsys):
     assert 'пропущен' in output
     assert os.path.exists('data')
 
+def test_rm_dir_y(fs: FakeFilesystem, monkeypatch):
+    fs.create_dir('data')
+    monkeypatch.setattr('builtins.input', lambda y: 'y')
+    rm.run_rm('data', r_flag=True)
+    assert not os.path.exists('data')
+
+def test_rm_dir_n(fs: FakeFilesystem, monkeypatch):
+    fs.create_dir('data')
+    monkeypatch.setattr('builtins.input', lambda n: 'n')
+    rm.run_rm('data', r_flag=True)
+    assert os.path.exists('data')
+
+
 def test_rm_current_dir(fs: FakeFilesystem, capsys):
     fs.create_dir('/data')
     os.chdir('/data')

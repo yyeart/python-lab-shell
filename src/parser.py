@@ -74,4 +74,7 @@ def parse_command(cmd: str, logger):
     else:
         err = f'Неизвестная команда: {command}'
         print(err)
-        logger.warning(err)
+        try:
+            logger.warning(err)
+        except AttributeError:
+            print('no logger found')
