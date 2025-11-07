@@ -1,7 +1,7 @@
 import os
 import importlib
 
-from pyfakefs.fake_filesystem import FakeFilesystem # type: ignore
+from pyfakefs.fake_filesystem import FakeFilesystem
 
 from src.commands import cp
 
@@ -43,15 +43,11 @@ def test_cp_dir_with_r_flag(fs: FakeFilesystem):
     with open('data/dest/file.txt') as f:
         assert f.read() == '123'
 
-def test_cp_file_to_dir(fs: FakeFilesystem, capsys):
+def test_cp_file_to_dir(fs: FakeFilesystem):
     fs.create_dir('data/dest')
     fs.create_file('data/file1.txt', contents='123')
     cp.run_cp('data/file1.txt', 'data/dest')
-    output = capsys.readouterr().out
-    assert 'каталог' in output
-
-# def test_cp_not_enough_args(fs: FakeFilesystem, capsys):
-#     fs.create_dir('data')
-#     cp.run_cp('data')
-#     output = capsys.readouterr().out
-#     assert 'недостаточно' in output
+    dest_file = 'data/dest/file1.txt'
+    assert os.path.exists(dest_file)
+    with open(dest_file) as f:
+        assert f.read() == '123'

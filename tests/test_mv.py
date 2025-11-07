@@ -1,6 +1,6 @@
 import os
 
-from pyfakefs.fake_filesystem import FakeFilesystem # type: ignore
+from pyfakefs.fake_filesystem import FakeFilesystem
 
 from src.commands import mv
 
@@ -41,3 +41,23 @@ def test_mv_folder(fs: FakeFilesystem, capsys):
     assert os.path.exists('folder2/folder1/file.txt')
     with open('folder2/folder1/file.txt') as f:
         assert f.read() == '123'
+
+def test_mv_no_read_perm(fs: FakeFilesystem, capsys):
+    fs.create_dir('/data')
+    fs.create_file('/data/file.txt', contents='123')
+    fs.chmod('/data/file.txt', 0)
+    mv.run_mv('/data/file.txt', '/data/new.txt')
+    output = capsys.readouterr().out
+    assert 'Недостаточно прав' in output or 'Нет прав на чтение' in output
+    assert os.path.exists('/data/file.txt')
+
+def test_mv_no_write_perm(fs: FakeFilesystem, capsys):
+    fs.create_dir('/src')
+    fs.create_dir('/dest')
+    fs.create_file('/src/file.txt', contents='123')
+    fs.create_file('/dest/file.txt', contents='456')
+    fs.chmod('/dest/file.txt', 0)
+    mv.run_mv('/src/file.txt', '/dest/file.txt')
+    output = capsys.readouterr().out
+    assert 'Нет прав на запись' in output
+    assert os.path.exists('/src/file.txt')

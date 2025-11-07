@@ -1,6 +1,7 @@
 import os
 
-from pyfakefs.fake_filesystem import FakeFilesystem # type: ignore
+from pyfakefs.fake_filesystem import FakeFilesystem
+from pathlib import Path
 
 from src.commands import rm
 
@@ -36,7 +37,7 @@ def test_rm_dir_y(fs: FakeFilesystem, monkeypatch):
     fs.create_dir('data')
     monkeypatch.setattr('builtins.input', lambda y: 'y')
     rm.run_rm('data', r_flag=True)
-    assert not os.path.exists('data')
+    assert not Path('data').exists()
 
 def test_rm_dir_n(fs: FakeFilesystem, monkeypatch):
     fs.create_dir('data')

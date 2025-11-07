@@ -1,6 +1,7 @@
 import os
 import pytest
 from pyfakefs.fake_filesystem_unittest import Patcher
+from pathlib import Path
 from src import parser
 
 @pytest.fixture
@@ -31,7 +32,7 @@ def test_parser_ls_nonexistent(create_ffs, capsys):
 def test_parser_cd(create_ffs):
     cmd = 'cd /dir'
     parser.parse_command(cmd, logger=None)
-    assert os.getcwd().endswith('\\dir')
+    assert Path(os.getcwd()).name == 'dir'
 
 def test_parser_cd_too_many_args(create_ffs, capsys):
     cmd = 'cd /dir /dir2'
@@ -103,7 +104,7 @@ def test_parser_rm_dir_y(create_ffs, monkeypatch):
     monkeypatch.setattr('builtins.input', lambda y: 'y')
 
     parser.parse_command(cmd, logger=None)
-    assert not os.path.exists('/dir')
+    assert not Path('/dir').exists()
 
 def test_parser_rm_dir_n(create_ffs, monkeypatch):
     cmd = 'rm -r /dir'

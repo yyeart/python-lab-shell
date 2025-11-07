@@ -1,5 +1,5 @@
-import pytest # type: ignore
-from pyfakefs.fake_filesystem import FakeFilesystem # type: ignore
+import pytest
+from pyfakefs.fake_filesystem import FakeFilesystem
 
 @pytest.fixture
 def fs(fs: FakeFilesystem) -> FakeFilesystem:

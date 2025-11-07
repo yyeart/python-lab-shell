@@ -1,6 +1,6 @@
 import os.path
 
-from pyfakefs.fake_filesystem import FakeFilesystem # type: ignore
+from pyfakefs.fake_filesystem import FakeFilesystem
 
 from src.commands import ls
 

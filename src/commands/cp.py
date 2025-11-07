@@ -31,6 +31,9 @@ def run_cp(source: str, dest: str, r_flag: bool = False) -> None:
                 custom_error(text)
             return
 
+        if d.is_dir():
+            d = d / s.name
+
         try:
             copy2(s, d)
             logger.info(f'cp {os.path.abspath(s)} {os.path.abspath(d)}')
