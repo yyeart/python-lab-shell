@@ -2,11 +2,8 @@ import logging
 import os
 from shutil import copy2, copytree
 from pathlib import Path
-from src.config import LOGGING_CONFIG
 from src.errors import not_found_error, perm_error, custom_error
 
-
-logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 
 def run_cp(source: str, dest: str, r_flag: bool = False) -> None:
@@ -26,9 +23,6 @@ def run_cp(source: str, dest: str, r_flag: bool = False) -> None:
                 logger.info(f'cp -r {os.path.abspath(s)} {os.path.abspath(d)}')
             except PermissionError as e:
                 perm_error(e)
-            except Exception as e:
-                text = f'cp: ошибка при копировании каталога - {e}'
-                custom_error(text)
             return
 
         if d.is_dir():
@@ -41,9 +35,6 @@ def run_cp(source: str, dest: str, r_flag: bool = False) -> None:
             perm_error(e)
         except IsADirectoryError:
             text = f'cp: {d} - каталог'
-            custom_error(text)
-        except Exception as e:
-            text = f'cp: ошибка при копировании файла - {e}'
             custom_error(text)
 
     except Exception as e:

@@ -2,10 +2,8 @@ import logging
 import os
 import shutil
 from pathlib import Path
-from src.config import LOGGING_CONFIG
 from src.errors import custom_error, perm_error
 
-logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 
 def run_mv(source: str, dest: str) -> None:

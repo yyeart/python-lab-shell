@@ -2,10 +2,9 @@ import logging
 from os import getcwd
 from src.config import LOGGING_CONFIG
 from src.parser import parse_command
+from src.setup_logger import logger
 
 logging.config.dictConfig(LOGGING_CONFIG)
-logger = logging.getLogger(__name__)
-
 
 def main() -> None:
     print('Для выхода используйте exit')

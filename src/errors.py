@@ -1,8 +1,6 @@
 import logging
-from src.config import LOGGING_CONFIG
 from pathlib import Path
 
-logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 
 def custom_error(text: str) -> None:

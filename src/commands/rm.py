@@ -3,9 +3,7 @@ import os
 from shutil import rmtree
 from pathlib import Path
 from src.errors import custom_error, not_found_error, perm_error
-from src.config import LOGGING_CONFIG
 
-logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 
 def run_rm(path: str, r_flag: bool = False):
