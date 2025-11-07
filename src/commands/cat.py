@@ -1,5 +1,6 @@
 import logging
 import os
+import sys
 from pathlib import Path
 from src.errors import path_error, perm_error, custom_error
 
@@ -22,13 +23,14 @@ def run_cat(path: str) -> None:
             return
         bin_endings = ['bin', 'exe', 'dat', 'jpg', 'png', 'gif', 'zip']
         content: str | bytes = ''
-        if str(p)[-3:] in bin_endings:
+        if p.suffix.lower()[1:] in bin_endings:
             with open(p, 'rb') as f:
-                content = f.read(64)
+                content = f.read()
+            sys.stdout.buffer.write(content)
         else:
             with open(p, 'r', encoding='utf-8') as f:
                 content = f.read()
-        print(content)
+                print(content)
         logger.info(f'cat {os.path.abspath(p)}')
 
     except PermissionError as e:
