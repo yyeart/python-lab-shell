@@ -32,8 +32,12 @@ def validate_tar(p: Path) -> bool:
     if not os.path.exists(p):
         path_error(p, 'untar')
         return False
-    if not tarfile.is_tarfile(p):
-        text = f'untar: {p} не является TAR-архивом'
+    if os.path.isdir(p):
+        text = f'{p} не является архивом TAR'
+        custom_error(text)
+        return False
+    if not str(p).endswith(('.tar.gz', '.tgz')):
+        text = f'{p} не является архивом TAR.GZ'
         custom_error(text)
         return False
     return True
@@ -71,7 +75,7 @@ def run_tar(source: str, dest: str) -> None:
         if not validate_source(s):
             return
         with tarfile.open(d, 'w:gz') as tar:
-            tar.add(s, arcname=s.name)
+            tar.add(s, arcname=s.name, filter=None)
         logger.info(f'tar {Path(os.path.abspath(s))} -> {Path(os.path.abspath(d))}')
     except PermissionError as e:
         perm_error(e)
@@ -82,7 +86,7 @@ def run_untar(path: str) -> None:
         if not validate_tar(p):
             return
         with tarfile.open(p, 'r:gz') as tar:
-            tar.extractall(os.getcwd())
+            tar.extractall(os.getcwd(), filter='data')
         logger.info(f'untar {os.path.abspath(p)} -> {os.getcwd()}')
     except PermissionError as e:
         perm_error(e)
