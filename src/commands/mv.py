@@ -32,6 +32,3 @@ def run_mv(source: str, dest: str) -> None:
 
     except PermissionError as e:
         perm_error(e)
-    except Exception as e:
-        text = f'mv: неожиданная ошибка - {e}'
-        custom_error(text)
