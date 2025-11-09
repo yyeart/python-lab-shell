@@ -7,6 +7,15 @@ from src.errors import custom_error, not_found_error, perm_error
 logger = logging.getLogger(__name__)
 
 def run_rm(path: str, r_flag: bool = False):
+    """
+    Удаляет файл или каталог\n
+    Для удаления каталога необходим r_flag=True для рекурсивного удаления и подтверждение пользователя
+
+    :param path: Путь
+    :type path: str
+    :param r_flag: Флаг для рекурсивного удаления
+    :type r_flag: bool
+    """
     p = Path(os.path.expanduser(path))
     if not os.path.exists(p):
         not_found_error(p, 'rm')

@@ -7,7 +7,19 @@ from src.errors import not_found_error, perm_error, custom_error
 logger = logging.getLogger(__name__)
 
 def run_cp(source: str, dest: str, r_flag: bool = False) -> None:
+    """
+    Копирует файл или каталог source в dest.\n
+    Для каталогов требуется r_flag=True для рекурсивного копирования.
+
+    :param source: Путь к файлу/каталогу
+    :type source: str
+    :param dest: Путь к копии
+    :type dest: str
+    :param r_flag: Флаг для рекурсивного копирования
+    :type r_flag: bool
+    """
     s, d = Path(os.path.expanduser(source)), Path(os.path.expanduser(dest))
+
     if not os.path.exists(s):
         not_found_error(s, 'cp')
         return

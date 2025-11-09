@@ -7,6 +7,14 @@ from src.errors import custom_error, perm_error
 logger = logging.getLogger(__name__)
 
 def run_mv(source: str, dest: str) -> None:
+    """
+    Перемещает файл или каталог source в dest.
+
+    :param source: Путь к файлу/каталогу
+    :type source: str
+    :param dest: Новый путь
+    :type dest: str
+    """
     s, d = Path(os.path.expanduser(source)), Path(os.path.expanduser(dest))
     try:
         if not os.path.exists(s):

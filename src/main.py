@@ -7,6 +7,11 @@ from src.setup_logger import logger
 logging.config.dictConfig(LOGGING_CONFIG)
 
 def main() -> None:
+    """
+    Точка входа в приложение\n
+    Цикл ввода команд пользователя\n
+    Поддерживает выход через 'exit' или KeyboardInterrupt
+    """
     print('Для выхода используйте exit')
 
     while True:

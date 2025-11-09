@@ -8,6 +8,14 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 def get_perms(mode: int) -> str:
+    """
+    Возвращает строковое представление прав доступа к файлу.
+
+    :param mode: тип файла и права доступа
+    :type mode: int
+    :return: Строковое представление прав доступа к файлу
+    :rtype: str
+    """
     try:
         mode_str = stat.filemode(mode)
     except Exception:
@@ -15,6 +23,12 @@ def get_perms(mode: int) -> str:
     return mode_str
 
 def print_long(item: Path) -> None:
+    """
+    Выводит детальную информацию: права доступа, размер, дату создания
+
+    :param item: Содержимое папки
+    :type item: Path
+    """
     st = item.stat()
     perms = get_perms(st.st_mode)
     size = st.st_size
@@ -22,6 +36,14 @@ def print_long(item: Path) -> None:
     print(f'{perms:>10} {size:>8} {mtime} {item.name}')
 
 def run_ls(path: str = '.', l_flag: bool = False) -> None:
+    """
+    Выводит список файлов и каталогов в указанной директории.
+
+    :param path: Путь к директории
+    :type path: str
+    :param l_flag: Если указан, выводит детальную информацию
+    :type l_flag: bool
+    """
     p = Path(os.path.expanduser(path))
     try:
         if not os.path.exists(p):

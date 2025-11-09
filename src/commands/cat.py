@@ -7,6 +7,12 @@ from src.errors import path_error, perm_error, custom_error
 logger = logging.getLogger(__name__)
 
 def validate_path(p: Path) -> bool:
+    """
+    Проверяет, существует ли путь и не является ли он каталогом.
+
+    :param p: Путь
+    :type p: Path
+    """
     if not os.path.exists(p):
         path_error(p, 'cat')
         return False
@@ -17,6 +23,13 @@ def validate_path(p: Path) -> bool:
     return True
 
 def run_cat(path: str) -> None:
+    """
+    Выводит содержимое файла\n
+    Обрабатывает текстовые и бинарные файлы
+
+    :param path: Путь
+    :type path: str
+    """
     p = Path(os.path.expanduser(path))
     try:
         if not validate_path(p):

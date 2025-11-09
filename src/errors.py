@@ -4,6 +4,12 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 def custom_error(text: str) -> None:
+    """
+    Выводит и логирует произвольную ошибку
+
+    :param text: Текст для вывода
+    :type text: str
+    """
     err = f'{text}'
     print(err)
     logger.error(err)

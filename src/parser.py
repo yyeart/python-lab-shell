@@ -1,7 +1,16 @@
-from src.commands import archive_commands, rm, mv, ls, cp, cd, cat
+from src.commands import archive_commands, grep, rm, mv, ls, cp, cd, cat
 from src.errors import too_many_args_error, no_args_error, not_enough_args_error
 
 def parse_command(cmd: str, logger):
+    """
+    Разбивает строку cmd на команды и аргументы\n
+    Вызывает соответствующие функции и обрабатывает ошибки
+
+    :param cmd: Команда пользователя
+    :type cmd: str
+    :param logger: Журнал действий
+    :type logger: Any
+    """
     split = cmd.split()
     command = split[0]
     args = split[1:]
@@ -113,6 +122,22 @@ def parse_command(cmd: str, logger):
         else:
             path = args[0]
             archive_commands.run_untar(path)
+    elif command == 'grep':
+        if len(args) == 0:
+            no_args_error(command)
+        elif len(args) == 1:
+            not_enough_args_error(command)
+        elif len(args) > 4:
+            too_many_args_error(command)
+        else:
+            r_flag = '-r' in args
+            i_flag = '-i' in args
+            flags = [a for a in args if a in ['-r', '-i']]
+            args_no_flags = [a for a in args if a not in flags]
+            if len(args_no_flags) < 2:
+                not_enough_args_error(command)
+            pattern, path = args_no_flags[0], args_no_flags[1]
+            grep.run_grep(pattern, path, r_flag, i_flag)
     else:
         err = f'Неизвестная команда: {command}'
         print(err)
