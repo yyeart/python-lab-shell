@@ -1,7 +1,6 @@
 import os
 
 from pyfakefs.fake_filesystem import FakeFilesystem
-from pathlib import Path
 
 from src.commands import rm
 
@@ -35,15 +34,17 @@ def test_rm_dir_without_r_flag(fs: FakeFilesystem, capsys):
 
 def test_rm_dir_y(fs: FakeFilesystem, monkeypatch):
     fs.create_dir('data')
+    os.chdir('/')
     monkeypatch.setattr('builtins.input', lambda y: 'y')
     rm.run_rm('data', r_flag=True)
-    assert not Path('data').exists()
+    assert not fs.exists('/dir')
 
 def test_rm_dir_n(fs: FakeFilesystem, monkeypatch):
     fs.create_dir('data')
+    os.chdir('/')
     monkeypatch.setattr('builtins.input', lambda n: 'n')
     rm.run_rm('data', r_flag=True)
-    assert os.path.exists('data')
+    assert fs.exists('data')
 
 
 def test_rm_current_dir(fs: FakeFilesystem, capsys):

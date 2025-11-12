@@ -11,6 +11,7 @@ def create_ffs():
     patcher = Patcher()
     patcher.setUp()
     fs = patcher.fs
+    os.chdir('/')
     fs.create_file('/root_file.txt', contents='123')
     fs.create_dir('/dir')
     fs.create_file('/dir/file.txt', contents='456abc\nABC')
@@ -103,20 +104,20 @@ def test_parser_rm_dir_without_r_flag(create_ffs, capsys):
     assert '-r' in output
 
 def test_parser_rm_dir_y(create_ffs, monkeypatch):
-    cmd = 'rm -r /dir'
+    cmd = 'rm -r dir'
 
     monkeypatch.setattr('builtins.input', lambda y: 'y')
 
     parser.parse_command(cmd, logger=None)
-    assert not Path('/dir').exists()
+    assert not Path('dir').exists()
 
 def test_parser_rm_dir_n(create_ffs, monkeypatch):
-    cmd = 'rm -r /dir'
+    cmd = 'rm -r dir'
 
     monkeypatch.setattr('builtins.input', lambda n: 'n')
 
     parser.parse_command(cmd, logger=None)
-    assert os.path.exists('/dir')
+    assert os.path.exists('dir')
 
 def test_parser_unknown_command(create_ffs, capsys):
     parser.parse_command('unknown', logger=None)
