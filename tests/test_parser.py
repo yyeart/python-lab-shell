@@ -3,6 +3,7 @@ import pytest
 import zipfile
 import tarfile
 from pyfakefs.fake_filesystem_unittest import Patcher
+from pyfakefs.fake_filesystem import FakeFilesystem
 from pathlib import Path
 from src import parser
 
@@ -103,13 +104,13 @@ def test_parser_rm_dir_without_r_flag(create_ffs, capsys):
     output = capsys.readouterr().out
     assert '-r' in output
 
-def test_parser_rm_dir_y(create_ffs, monkeypatch):
-    cmd = 'rm -r dir'
-
+def test_parser_rm_dir_y(fs: FakeFilesystem, monkeypatch):
+    fs.create_dir('data')
+    os.chdir('/')
+    cmd = 'rm -r data'
     monkeypatch.setattr('builtins.input', lambda y: 'y')
-
     parser.parse_command(cmd, logger=None)
-    assert not Path('dir').exists()
+    assert not fs.exists('data')
 
 def test_parser_rm_dir_n(create_ffs, monkeypatch):
     cmd = 'rm -r dir'

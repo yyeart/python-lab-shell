@@ -37,7 +37,7 @@ def test_rm_dir_y(fs: FakeFilesystem, monkeypatch):
     os.chdir('/')
     monkeypatch.setattr('builtins.input', lambda y: 'y')
     rm.run_rm('data', r_flag=True)
-    assert not fs.exists('/dir')
+    assert not fs.exists('data')
 
 def test_rm_dir_n(fs: FakeFilesystem, monkeypatch):
     fs.create_dir('data')
