@@ -33,18 +33,18 @@ def test_rm_dir_without_r_flag(fs: FakeFilesystem, capsys):
     assert os.path.exists('data')
 
 def test_rm_dir_y(fs: FakeFilesystem, monkeypatch):
-    fs.create_dir('data')
+    fs.create_dir('/data')
     os.chdir('/')
-    monkeypatch.setattr('builtins.input', lambda y: 'y')
-    rm.run_rm('data', r_flag=True)
-    assert not fs.exists('data')
+    monkeypatch.setattr('builtins.input', lambda _: 'y')
+    rm.run_rm('/data', r_flag=True)
+    assert not fs.exists('/data')
 
 def test_rm_dir_n(fs: FakeFilesystem, monkeypatch):
-    fs.create_dir('data')
+    fs.create_dir('/data')
     os.chdir('/')
-    monkeypatch.setattr('builtins.input', lambda n: 'n')
-    rm.run_rm('data', r_flag=True)
-    assert fs.exists('data')
+    monkeypatch.setattr('builtins.input', lambda _: 'n')
+    rm.run_rm('/data', r_flag=True)
+    assert fs.exists('/data')
 
 
 def test_rm_current_dir(fs: FakeFilesystem, capsys):
@@ -56,7 +56,11 @@ def test_rm_current_dir(fs: FakeFilesystem, capsys):
     assert os.path.exists('/data')
 
 def test_rm_root_parent_dir(fs: FakeFilesystem, capsys):
-    fs.create_dir('/root')
+    fs.create_dir('/dir')
+    os.chdir('/dir')
+    rm.run_rm('..', r_flag=True)
+    output = capsys.readouterr().out
+    assert 'запрещено' in output
     rm.run_rm('/', r_flag=True)
     output = capsys.readouterr().out
     assert 'запрещено' in output

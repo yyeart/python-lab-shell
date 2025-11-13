@@ -105,20 +105,20 @@ def test_parser_rm_dir_without_r_flag(create_ffs, capsys):
     assert '-r' in output
 
 def test_parser_rm_dir_y(fs: FakeFilesystem, monkeypatch):
-    fs.create_dir('data')
+    fs.create_dir('/data')
     os.chdir('/')
-    cmd = 'rm -r data'
-    monkeypatch.setattr('builtins.input', lambda y: 'y')
+    cmd = 'rm -r /data'
+    monkeypatch.setattr('builtins.input', lambda _: 'y')
     parser.parse_command(cmd, logger=None)
-    assert not fs.exists('data')
+    assert not fs.exists('/data')
 
-def test_parser_rm_dir_n(create_ffs, monkeypatch):
-    cmd = 'rm -r dir'
-
-    monkeypatch.setattr('builtins.input', lambda n: 'n')
-
+def test_parser_rm_dir_n(fs: FakeFilesystem, monkeypatch):
+    fs.create_dir('/data')
+    os.chdir('/')
+    cmd = 'rm -r /data'
+    monkeypatch.setattr('builtins.input', lambda _: 'n')
     parser.parse_command(cmd, logger=None)
-    assert os.path.exists('dir')
+    assert fs.exists('/data')
 
 def test_parser_unknown_command(create_ffs, capsys):
     parser.parse_command('unknown', logger=None)

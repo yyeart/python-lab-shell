@@ -17,27 +17,28 @@ def run_rm(path: str, r_flag: bool = False):
     :type r_flag: bool
     """
     p = Path(os.path.expanduser(path))
+    abs_p = os.path.normpath(os.path.abspath(p))
     if not os.path.exists(p):
         not_found_error(p, 'rm')
         return
-    if p.resolve() in [Path('/').resolve(), Path('..').resolve()]:
-        text = 'rm: запрещено удалять корневой или родительский каталог'
-        custom_error(text)
+    cwd = os.path.normpath(os.getcwd())
+    if abs_p in [os.path.abspath('/'), os.path.abspath('..')]:
+        custom_error('rm: запрещено удалять корневой или родительский каталог')
         return
-    if p.resolve() == Path(os.getcwd()).resolve():
-        text = 'rm: нельзя удалить текущий каталог'
-        custom_error(text)
+
+    if abs_p == cwd:
+        custom_error('rm: нельзя удалить текущий каталог')
         return
     if p.is_file() and r_flag:
         text = 'rm: флаг -r не применим к файлу'
         custom_error(text)
         return
-    if os.path.isdir(p):
+    if p.is_dir():
         if not r_flag:
             text = 'rm: пропущен флаг -r для удаления каталога'
             custom_error(text)
             return
-        flag = True if input('rm: удалить каталог рекурсивно?(y/n) ').lower() == 'y' else False
+        flag = True if input('rm: удалить каталог рекурсивно?(y/n) ').strip().lower() == 'y' else False
         if flag:
             try:
                 rmtree(p)
