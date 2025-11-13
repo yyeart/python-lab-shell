@@ -21,7 +21,7 @@ def run_rm(path: str, r_flag: bool = False):
     if not os.path.exists(p):
         not_found_error(p, 'rm')
         return
-    cwd = os.path.normpath(os.getcwd())
+    cwd = os.path.abspath(os.getcwd())
     if abs_p in [os.path.abspath('/'), os.path.abspath('..')]:
         custom_error('rm: запрещено удалять корневой или родительский каталог')
         return
@@ -41,7 +41,7 @@ def run_rm(path: str, r_flag: bool = False):
         flag = True if input('rm: удалить каталог рекурсивно?(y/n) ').strip().lower() == 'y' else False
         if flag:
             try:
-                rmtree(p)
+                rmtree(abs_p)
                 logger.info(f'rm -r {os.path.abspath(p)}')
             except PermissionError as e:
                 perm_error(e)
