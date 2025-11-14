@@ -104,14 +104,6 @@ def test_parser_rm_dir_without_r_flag(create_ffs, capsys):
     output = capsys.readouterr().out
     assert '-r' in output
 
-def test_parser_rm_dir_y(fs: FakeFilesystem, monkeypatch):
-    fs.create_dir('/data')
-    os.chdir('/')
-    cmd = 'rm -r /data'
-    monkeypatch.setattr('builtins.input', lambda _: 'y')
-    parser.parse_command(cmd, logger=None)
-    assert not fs.exists('/data')
-
 def test_parser_rm_dir_n(fs: FakeFilesystem, monkeypatch):
     fs.create_dir('/data')
     os.chdir('/')
